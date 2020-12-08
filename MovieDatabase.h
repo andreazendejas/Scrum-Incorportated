@@ -50,9 +50,7 @@ public:
 		//Load the file line by line until we reach the end
 		while (getline(fin, temp))
 		{ 
-			//This is for Debug
-			lines.push_back(temp);
-
+			//put the line into the stringstream for parsing.
 			ss << temp;
 			//With the line in a string stream, use getline with comma as delimiter to get each component of the line separately and push them into a string vector.
 			while (ss.good())
@@ -119,15 +117,61 @@ public:
 		fin.close();
 	}
 	
-	Movie GetMovieAt(int num)
+	void LoadURLs(string filename)
 	{
-		return movies[num];
+		fstream fin;
+		stringstream ss;
+		string temp, fName, fURL;
+
+		fin.open(filename, ios::in);
+
+		while (getline(fin, temp))
+		{
+			cout << "Temp = " << temp << endl;
+			//put the line into the stringstream for parsing.
+			ss << temp;
+
+			while (ss.good())
+			{
+				getline(ss, fName, ':');
+				getline(ss, fURL);
+				cout << "fName = " << fName << endl;
+				cout << "URL = " << fURL << endl;
+				AddURLToFilm(fName, fURL);
+			}
+			ss.str("");
+			ss.clear();
+		}
+
+		fin.close();
 	}
 
-	string ReturnLineNum(int num)
+	void AddURLToFilm(string fName, string fURL)
 	{
-		return lines[num];
+		for (int i = 0; i < movies.size();i++)
+		{
+			if (movies[i].GetFilmName() == fName)
+			{
+				movies[i].SetURL(fURL);
+				break;
+			}
+		}
 	}
+
+	Movie GetMovieAt(int num)
+	{
+		Movie retTemp;
+		if (num < movies.size() && num  >= 0)
+		{
+			return movies[num];
+		}
+		else
+		{
+			return retTemp;
+		}
+			 
+	}
+
 
 	int MovieCount()
 	{
@@ -165,20 +209,6 @@ public:
 		{
 			movies[x].AddNomination(cat, aName, win);
 		}
-	}
-
-	//This is obsolete.  Leaving it here just in case it's useful later
-	string ConvertStringFormat(string targetStr, char changeThis, char toThis)
-	{
-		for (int i = 0; i < targetStr.length(); i++)
-		{
-			if (targetStr[i] == changeThis)
-			{
-				targetStr[i] = toThis;
-			}
-		}
-
-		return targetStr;
 	}
 
 
@@ -350,6 +380,7 @@ public:
 			os << "\"FilmName\":\""<<movieSubset[i].GetFilmName()<<"\",\n";
 			os << "\"YearReleased\":\"" << movieSubset[i].GetYearM() << "\",\n";
 			os << "\"YearNominated\":\"" << movieSubset[i].GetYearC() << "\",\n";
+			os << "\"URL\":\"" << movieSubset[i].GetURL() << "\",\n";
 			os << "\"Nominations\": [\n";
 			for (int j = 0; j < noms.size(); j++)
 			{
@@ -380,7 +411,6 @@ public:
 	}
 
 private:
-	vector<string> lines;
 	vector<Movie> movies;
 };
 

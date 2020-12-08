@@ -24,12 +24,14 @@ public:
 		yearMovie = yearM;
 		yearCeremony = yearC;
 		filmName = fName;
+		url = "";
 	}
 	Movie()
 	{
 		yearMovie = -1;
 		yearCeremony = -1;
 		filmName = "";
+		url = "";
 	}
 
 	void AddNomination(string cat, string aName, bool win)
@@ -76,6 +78,16 @@ public:
 	string GetFilmName()
 	{
 		return filmName;
+	}
+
+	string GetURL()
+	{
+		return url;
+	}
+
+	void SetURL(string incURL)
+	{
+		url = incURL;
 	}
 
 	bool IsWinner()
@@ -140,6 +152,7 @@ private:
 	int yearMovie, yearCeremony;
 	string filmName;
 	vector<Nomination> noms;
+	string url;
 };
 
 
